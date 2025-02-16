@@ -64,7 +64,87 @@ export const DEFAULT_PROMPTS = {
     });
     \`\`\`
   `,
-
+  /**
+ * Prompt for generating Playwright TypeScript Page Object Model (POM) code ONLY
+ * (No test class or test scripts).
+ */
+  PLAYWRIGHT_TYPESCRIPT_PAGE_ONLY: `
+  Given the following DOM structure:
+  \`\`\`html
+  \${domContent}
+  \`\`\`
+  
+  We want ONLY a Playwright TypeScript PAGE OBJECT CLASS for that DOM.
+  Action to perform: \${userAction}
+  URL: \${pageUrl}
+  
+  Requirements:
+  1. Use recommended Playwright locator strategies in priority:
+     - Locate by role, text, or label (preferred for accessibility)
+     - Use getByTestId if data-testid attributes are present
+     - Use locator with CSS selectors (avoid generic attributes like "class" or "id" unless necessary)
+     - Avoid XPath unless absolutely necessary
+  
+  2. Implementation guidelines:
+     - Use TypeScript best practices (e.g., type safety, interfaces, etc.)
+     - Use Playwright's built-in waits (no explicit waits needed)
+     - Add JSDoc comments for methods and class
+     - Use Faker.js for generating test data if needed
+     - DO NOT provide any test scripts—only the page class
+     - Use a modular and reusable structure
+  
+  3. Code structure:
+     - Single page class
+     - A constructor that accepts a Playwright Page object
+     - Use private properties for locators
+     - Provide only the code block, no other text
+  
+  [IMPORTANT] Ensure the generated code adheres to the below structure and guidelines'.
+  
+  Example:
+  \`\`\`typescript
+  import { Page, Locator } from '@playwright/test';
+  
+  export class ComponentPage {
+    private readonly page: Page;
+    private readonly submitButton: Locator;
+    private readonly usernameInput: Locator;
+    private readonly passwordInput: Locator;
+  
+    constructor(page: Page) {
+      this.page = page;
+      this.submitButton = page.getByRole('button', { name: 'Submit' });
+      this.usernameInput = page.getByLabel('Username');
+      this.passwordInput = page.getByLabel('Password');
+    }
+  
+    /**
+     * Enters the username into the username input field.
+     * @param username - The username to enter.
+     */
+    async enterUsername(username: string): Promise<void> {
+      await this.usernameInput.fill(username);
+    }
+  
+    /**
+     * Enters the password into the password input field.
+     * @param password - The password to enter.
+     */
+    async enterPassword(password: string): Promise<void> {
+      await this.passwordInput.fill(password);
+    }
+  
+    /**
+     * Clicks the submit button.
+     */
+    async clickSubmit(): Promise<void> {
+      await this.submitButton.click();
+    }
+  }
+  \`\`\`.
+      `
+    ,
+    
   /**
    * Prompt for generating Selenium Java test code ONLY
    * (No page object class at all).
@@ -204,87 +284,6 @@ export const DEFAULT_PROMPTS = {
     \`\`\`
   `,
    
-  /**
- * Prompt for generating Playwright TypeScript Page Object Model (POM) code ONLY
- * (No test class or test scripts).
- */
-PLAYWRIGHT_TYPESCRIPT_PAGE_ONLY: `
-Given the following DOM structure:
-\`\`\`html
-\${domContent}
-\`\`\`
-
-We want ONLY a Playwright TypeScript PAGE OBJECT CLASS for that DOM.
-Action to perform: \${userAction}
-URL: \${pageUrl}
-
-Requirements:
-1. Use recommended Playwright locator strategies in priority:
-   - Locate by role, text, or label (preferred for accessibility)
-   - Use getByTestId if data-testid attributes are present
-   - Use locator with CSS selectors (avoid generic attributes like "class" or "id" unless necessary)
-   - Avoid XPath unless absolutely necessary
-
-2. Implementation guidelines:
-   - Use TypeScript best practices (e.g., type safety, interfaces, etc.)
-   - Use Playwright's built-in waits (no explicit waits needed)
-   - Add JSDoc comments for methods and class
-   - Use Faker.js for generating test data if needed
-   - DO NOT provide any test scripts—only the page class
-   - Use a modular and reusable structure
-
-3. Code structure:
-   - Single page class
-   - A constructor that accepts a Playwright Page object
-   - Use private properties for locators
-   - Provide only the code block, no other text
-
-[IMPORTANT] Ensure the generated code adheres to the below structure and guidelines'.
-
-Example:
-\`\`\`typescript
-import { Page, Locator } from '@playwright/test';
-
-export class ComponentPage {
-  private readonly page: Page;
-  private readonly submitButton: Locator;
-  private readonly usernameInput: Locator;
-  private readonly passwordInput: Locator;
-
-  constructor(page: Page) {
-    this.page = page;
-    this.submitButton = page.getByRole('button', { name: 'Submit' });
-    this.usernameInput = page.getByLabel('Username');
-    this.passwordInput = page.getByLabel('Password');
-  }
-
-  /**
-   * Enters the username into the username input field.
-   * @param username - The username to enter.
-   */
-  async enterUsername(username: string): Promise<void> {
-    await this.usernameInput.fill(username);
-  }
-
-  /**
-   * Enters the password into the password input field.
-   * @param password - The password to enter.
-   */
-  async enterPassword(password: string): Promise<void> {
-    await this.passwordInput.fill(password);
-  }
-
-  /**
-   * Clicks the submit button.
-   */
-  async clickSubmit(): Promise<void> {
-    await this.submitButton.click();
-  }
-}
-\`\`\`.
-    `
-    ,
-
   /**
    * Prompt for generating Cucumber Feature file
    */
