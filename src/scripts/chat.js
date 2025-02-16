@@ -648,7 +648,7 @@ class ChatUI {
         }
         
         // fallback
-        return 'PLAYWRIGHT_CODE_GENERATION';
+        return 'PLAYWRIGHT_TYPESCRIPT_PAGE_ONLY';
       }
       
 
